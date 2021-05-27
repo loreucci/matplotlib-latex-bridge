@@ -1,0 +1,27 @@
+\documentclass[letterpaper, 10pt, twocolumn]{article}
+
+\usepackage{graphicx}
+\usepackage[export]{adjustbox}
+\usepackage{showframe}
+
+\begin{document}
+
+\begin{figure*}[hp]
+\centering
+\includegraphics[scale=1,frame]{img.png}
+\caption{Textwidth figure, no scale}
+\end{figure*}
+
+\begin{figure*}[hp]
+\centering
+\includegraphics[width=\textwidth,frame]{img.png}
+\caption{Textwidth figure, scaled}
+\end{figure*}
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=\linewidth,frame]{img.png}
+\caption{Linewidth figure, scaled}
+\end{figure}
+
+\end{document}
