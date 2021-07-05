@@ -1,5 +1,7 @@
 # matplotlib-latex-bridge
 
+[![Documentation Status](https://readthedocs.org/projects/matplotlib-latex-bridge/badge/?version=latest)](https://matplotlib-latex-bridge.readthedocs.io/en/latest/?badge=latest)
+
 Functions and shortcuts to create latex-ready images from matplotlib.
 
 
@@ -29,3 +31,5 @@ Include it in the latex file without scaling:
 \end{figure}
 ```
 That's it!
+
+For more options please refer to the [online documentation](https://matplotlib-latex-bridge.readthedocs.io).
