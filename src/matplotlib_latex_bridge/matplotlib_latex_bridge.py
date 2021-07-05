@@ -59,7 +59,6 @@ def set_font_sizes(small=8, medium=10, big=12):
         big = int(12 * medium / 10)
 
     matplotlib.rc('font', size=small)          # controls default text sizes
-    matplotlib.rc('axes', titlesize=small)     # fontsize of the axes title
     matplotlib.rc('axes', labelsize=medium)    # fontsize of the x and y labels
     matplotlib.rc('xtick', labelsize=small)    # fontsize of the tick labels
     matplotlib.rc('ytick', labelsize=small)    # fontsize of the tick labels
