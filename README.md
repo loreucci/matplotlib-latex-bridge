@@ -2,7 +2,13 @@
 
 [![Documentation Status](https://readthedocs.org/projects/matplotlib-latex-bridge/badge/?version=latest)](https://matplotlib-latex-bridge.readthedocs.io/en/latest/?badge=latest)
 
-Functions and shortcuts to create latex-ready images from matplotlib.
+This library provides a set of functions and shortcuts to create latex-ready images with matplotlib.
+
+This library is not a replacement for matplotib, it can just be used to set sensible settings in order to have figures with readable text and with a font size that is consistent both among various figures and with the rest of the text in the document.
+
+Example:
+
+![example](https://github.com/loreucci/matplotlib-latex-bridge/raw/master/mlb-example.png)
 
 
 ## Quickstart
@@ -16,10 +22,10 @@ mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn)
 ```
 Create a new figure and use it as normal:
 ```python
-fig = mlb.figure_textwidth()  # for full page images
-fig = mlb.figure_linewidth()  # for full column images
+mlb.figure_textwidth()  # for full page images
+mlb.figure_linewidth()  # for full column images
 
-plt.plot(...)
+plt.plot(...)  # use matplotlib as normal
 
 fig.savefig("image.png")
 ```

@@ -32,9 +32,12 @@ setting the right sizes:
     fig = mlb.figure_textwidth()  # for full page images
     fig = mlb.figure_linewidth()  # for full column images
 
+    # from now on use matplotlib as normal
     plt.plot(...)
 
     fig.savefig("image.png")
+
+**Note:** the figure should be saved via ``savefig``, as using ``show`` may alter the shape/scale of the figure.
 
 Figures created like this should be included in the latex file without scaling:
 

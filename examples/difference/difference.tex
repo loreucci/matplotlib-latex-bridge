@@ -1,0 +1,31 @@
+\documentclass[letterpaper, 10pt, twocolumn]{article}
+
+\usepackage{graphicx}
+\usepackage{lipsum}
+
+
+\begin{document}
+
+\lipsum[1][1-4]
+
+\begin{figure}[hp]
+\centering
+\includegraphics[width=\linewidth]{default.png}
+\caption{Default matplotlib figure}
+\end{figure}
+
+\lipsum[1][5-20]
+
+\newpage
+
+\lipsum[1][1-4]
+
+\begin{figure}[hp]
+\centering
+\includegraphics[scale=1]{mlb.png}
+\caption{Using this library}
+\end{figure}
+
+\lipsum[1][5-20]
+
+\end{document}
