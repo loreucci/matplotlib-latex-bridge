@@ -4,7 +4,7 @@
 
 This library provides a set of functions and shortcuts to create latex-ready images with matplotlib.
 
-This library is not a replacement for matplotib, it can just be used to set sensible settings in order to have figures with readable text and with a font size that is consistent both among various figures and with the rest of the text in the document.
+This library is not a replacement for matplotlib, it can just be used to set sensible settings in order to have figures with readable text and with a font size that is consistent both among various figures and with the rest of the text in the document.
 
 Example:
 
