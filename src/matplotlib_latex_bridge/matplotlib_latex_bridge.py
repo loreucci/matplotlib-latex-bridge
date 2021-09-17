@@ -111,7 +111,8 @@ def set_default_figsize(w=None, h=None, dpi=400):
     """
     w, h = adjust_size(w, h)
 
-    matplotlib.rc('figure', figsize=(w, h), dpi=dpi)
+    matplotlib.rc('figure', figsize=(w, h))
+    matplotlib.rc('savefig', dpi=dpi)
 
 
 def setup_page(textwidth, linewidth, fontsize, dpi=400):

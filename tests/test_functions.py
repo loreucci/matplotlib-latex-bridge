@@ -18,6 +18,12 @@ class TestBasics(unittest.TestCase):
         self.assertEqual(matplotlib.rcParams["figure.figsize"][0], 10)
         self.assertEqual(matplotlib.rcParams["figure.figsize"][1], 20)
 
+    def test_dpi_changed_savefig(self):
+        dpi = matplotlib.rcParams["figure.dpi"]
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn, dpi=200)
+        self.assertEqual(matplotlib.rcParams["figure.dpi"], dpi)
+        self.assertEqual(matplotlib.rcParams["savefig.dpi"], 200)
+
 
 class TestFigure(unittest.TestCase):
 
