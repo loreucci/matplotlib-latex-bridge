@@ -48,14 +48,15 @@ def adjust_size(w, h):
 
 
 # public API
-def set_font_family(family='serif'):
+def set_font_family(family='serif', usetex=True):
     """
     Set the default font to match latex
 
     :param family: font family used in the document
+    :param usetex: if True Tex processor is enabled for text
     """
     plt.rc('font', family=family)
-    plt.rc('text', usetex=True)
+    plt.rc('text', usetex=usetex)
 
 
 def get_default_figsize():
@@ -115,7 +116,7 @@ def set_default_figsize(w=None, h=None, dpi=400):
     matplotlib.rc('savefig', dpi=dpi)
 
 
-def setup_page(textwidth, linewidth, fontsize, dpi=400):
+def setup_page(textwidth, linewidth, fontsize, dpi=400, usetex=True):
     """
     Setup the page defaults
 
@@ -123,6 +124,7 @@ def setup_page(textwidth, linewidth, fontsize, dpi=400):
     :param linewidth: widht of the line (column) in inches
     :param fontsize: default font size of the document
     :param dpi: dpi for generated images
+    :param usetex: if True Tex processor is enabled for text
     """
 
     global mlb_textwidth, mlb_linewidth, mlb_initialized
@@ -141,7 +143,7 @@ def setup_page(textwidth, linewidth, fontsize, dpi=400):
     plt.rc('figure.constrained_layout', use=True)
 
     # match latex fonts
-    set_font_family()
+    set_font_family(usetex=usetex)
 
     mlb_initialized = True
 
