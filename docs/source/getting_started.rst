@@ -24,6 +24,10 @@ By using these presets, the library can be initialized as follows:
 
     mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn)
 
+**Note:** for better results, LaTeX rendering for text is enabled by default, unless no working latex installation is detected.
+To disable this behaviour, pass ``usetex=False`` to ``setup_page``
+(see :func:`matplotlib_latex_bridge.setup_page` and :func:`matplotlib_latex_bridge.set_font_family`).
+
 After the library has been initialized, new figures should be created using two library functions that take care of
 setting the right sizes:
 

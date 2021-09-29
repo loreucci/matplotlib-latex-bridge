@@ -1,5 +1,5 @@
-import matplotlib
 import matplotlib.pyplot as plt
+import shutil
 
 
 mlb_initialized = False
@@ -25,7 +25,8 @@ def adjust_size(w, h):
     """
     Adjust a given figure size with the current defaults
 
-    If only one of the two values (or none of them) has been specified, this function will keep the default matplotlib ratio.
+    If only one of the two values (or none of them) has been specified,
+    this function will keep the default matplotlib ratio.
 
     :param w: input width
     :param h: input height
@@ -52,11 +53,21 @@ def set_font_family(family='serif', usetex=True):
     """
     Set the default font to match latex
 
+    Using LaTex to render text requires a working LaTeX installation.
+
     :param family: font family used in the document
-    :param usetex: if True Tex processor is enabled for text
+    :param usetex: True if the LaTeX processor should be enabled to render text
     """
     plt.rc('font', family=family)
-    plt.rc('text', usetex=usetex)
+    # if usetex is None:
+    ex = shutil.which("latex")
+    if ex is None:
+        haslatex = False
+    else:
+        haslatex = True
+    if usetex and not haslatex:
+        print("Requested LaTeX rendering, but no LaTeX installation found, disabling")
+    plt.rc('text', usetex=usetex and haslatex)
 
 
 def get_default_figsize():
@@ -65,8 +76,8 @@ def get_default_figsize():
 
     :return: default width, default height
     """
-    w = matplotlib.rcParams["figure.figsize"][0]
-    h = matplotlib.rcParams["figure.figsize"][1]
+    w = plt.rcParams["figure.figsize"][0]
+    h = plt.rcParams["figure.figsize"][1]
     return w, h
 
 
@@ -92,12 +103,12 @@ def set_font_sizes(small=8, medium=10, big=12):
     if big is None:
         big = int(12 * medium / 10)
 
-    matplotlib.rc('font', size=small)          # controls default text sizes
-    matplotlib.rc('axes', labelsize=medium)    # fontsize of the x and y labels
-    matplotlib.rc('xtick', labelsize=small)    # fontsize of the tick labels
-    matplotlib.rc('ytick', labelsize=small)    # fontsize of the tick labels
-    matplotlib.rc('legend', fontsize=small)    # legend fontsize
-    matplotlib.rc('axes', titlesize=big)       # fontsize of the figure title
+    plt.rc('font', size=small)          # controls default text sizes
+    plt.rc('axes', labelsize=medium)    # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=small)    # fontsize of the tick labels
+    plt.rc('ytick', labelsize=small)    # fontsize of the tick labels
+    plt.rc('legend', fontsize=small)    # legend fontsize
+    plt.rc('axes', titlesize=big)       # fontsize of the figure title
 
 
 def set_default_figsize(w=None, h=None, dpi=400):
@@ -112,19 +123,21 @@ def set_default_figsize(w=None, h=None, dpi=400):
     """
     w, h = adjust_size(w, h)
 
-    matplotlib.rc('figure', figsize=(w, h))
-    matplotlib.rc('savefig', dpi=dpi)
+    plt.rc('figure', figsize=(w, h))
+    plt.rc('savefig', dpi=dpi)
 
 
 def setup_page(textwidth, linewidth, fontsize, dpi=400, usetex=True):
     """
     Setup the page defaults
 
+    Using LaTex to render text requires a working LaTeX installation.
+
     :param textwidth: width of the text in inches
     :param linewidth: widht of the line (column) in inches
     :param fontsize: default font size of the document
     :param dpi: dpi for generated images
-    :param usetex: if True Tex processor is enabled for text
+    :param usetex: True if the LaTeX processor should be enabled to render text
     """
 
     global mlb_textwidth, mlb_linewidth, mlb_initialized
