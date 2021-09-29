@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import shutil
+import sys
 
 
 mlb_initialized = False
@@ -66,7 +67,7 @@ def set_font_family(family='serif', usetex=True):
     else:
         haslatex = True
     if usetex and not haslatex:
-        print("Requested LaTeX rendering, but no LaTeX installation found, disabling")
+        print("Requested LaTeX rendering, but no LaTeX installation found, disabling", file=sys.stderr)
     plt.rc('text', usetex=usetex and haslatex)
 
 
@@ -161,32 +162,42 @@ def setup_page(textwidth, linewidth, fontsize, dpi=400, usetex=True):
     mlb_initialized = True
 
 
-def figure_textwidth(height=None, **kwargs):
+def figure_textwidth(widthp=1.0, height=None, **kwargs):
     """
     Creates a figure that fill the width of the page
 
+    :param widthp: width of the figure as a percentage of the text width (between 0 and 1)
     :param height: height of the figure (optional)
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
     assert_initialized("figure_textwidth")
 
-    w, h = adjust_size(mlb_textwidth, height)
+    if widthp <= 0 or widthp > 1:
+        print(f"Invalid percentual width of the figure {widthp}, must be between 0 and 1", file=sys.stderr)
+        widthp = 1.0
+
+    w, h = adjust_size(widthp * mlb_textwidth, height)
 
     return plt.figure(figsize=(w, h), **kwargs)
 
 
-def figure_linewidth(height=None, **kwargs):
+def figure_linewidth(widthp=1.0, height=None, **kwargs):
     """
     Creates a figure that fill the width of the line (column)
 
+    :param widthp: width of the figure as a percentage of the line width (between 0 and 1)
     :param height:  height of the figure (optional)
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
     assert_initialized("figure_linewidth")
 
-    w, h = adjust_size(mlb_linewidth, height)
+    if widthp <= 0 or widthp > 1:
+        print(f"Invalid percentual width of the figure {widthp}, must be between 0 and 1", file=sys.stderr)
+        widthp = 1.0
+
+    w, h = adjust_size(widthp * mlb_linewidth, height)
 
     return plt.figure(figsize=(w, h), **kwargs)
 
@@ -207,8 +218,10 @@ def figure(width=None, height=None, **kwargs):
     w, h = adjust_size(width, height)
 
     if mlb_linewidth < w < mlb_textwidth:
-        print(f"matplotlib-latex-bridge warning: requested width ({w}) is larger that linewidth ({mlb_linewidth})")
+        print(f"matplotlib-latex-bridge warning: requested width ({w}) is larger that linewidth ({mlb_linewidth})",
+              file=sys.stderr)
     elif mlb_textwidth < w:
-        print(f"matplotlib-latex-bridge warning: requested width ({w}) is larger that textwidth ({mlb_textwidth})")
+        print(f"matplotlib-latex-bridge warning: requested width ({w}) is larger that textwidth ({mlb_textwidth})",
+              file=sys.stderr)
 
     return plt.figure(figsize=(w, h), **kwargs)
