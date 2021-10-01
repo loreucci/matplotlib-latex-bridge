@@ -1,5 +1,13 @@
-import unittest.mock
-import io
+import sys
+import unittest
+if sys.version_info >= (3, 3):
+    import unittest.mock as mock
+else:
+    import mock
+if sys.version_info >= (3, 0):
+    from io import StringIO
+else:
+    from io import BytesIO as StringIO
 
 import matplotlib_latex_bridge as mlb
 import matplotlib
@@ -21,7 +29,7 @@ class TestBasics(unittest.TestCase):
 
     def test_dpi_changed_savefig(self):
         dpi = matplotlib.rcParams["figure.dpi"]
-        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn, dpi=200)
+        mlb.setup_page(dpi=200, **mlb.formats.article_letterpaper_10pt_singlecolumn)
         self.assertEqual(matplotlib.rcParams["figure.dpi"], dpi)
         self.assertEqual(matplotlib.rcParams["savefig.dpi"], 200)
 
@@ -50,7 +58,7 @@ class TestFigure(unittest.TestCase):
         w, _ = fig.get_size_inches()
         self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["linewidth"]*0.7)
 
-    @unittest.mock.patch('sys.stderr', new_callable=io.StringIO)
+    @mock.patch('sys.stderr', new_callable=StringIO)
     def test_width_percentage_error(self, mock_stderr):
         mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
 
