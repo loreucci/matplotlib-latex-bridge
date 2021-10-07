@@ -84,7 +84,9 @@ def set_font_sizes(small=8, medium=10, big=12):
     """
     Set the default fonts for the figures
 
-    Usually the medium size correspond to the normal latex text font size.
+    Usually the medium size should correspond to the normal latex text font size.
+
+    The small and big sizes can be omitted, and they will be computed according to the medium size.
 
     :param small: used for ticks and legends
     :param medium: used for the labels of the axes
