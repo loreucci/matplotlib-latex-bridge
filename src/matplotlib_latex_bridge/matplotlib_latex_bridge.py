@@ -2,6 +2,10 @@ from __future__ import print_function
 import matplotlib.pyplot as plt
 import os
 import sys
+import re
+import subprocess
+import tempfile
+import shutil
 
 
 mlb_initialized = False
@@ -225,3 +229,101 @@ def figure(width=None, height=None, **kwargs):
         print("Requested width ({}) is larger that textwidth ({})".format(w, mlb_textwidth), file=sys.stderr)
 
     return plt.figure(figsize=(w, h), **kwargs)
+
+
+def get_format_from_latex(documentclass, columns=None, papersize=None, fontsize=None, otheroptions=None):
+    """
+    Get the format by invoking the LaTeX processor
+
+    This functions compiles a sample file with the LaTeX processor and parse its output to get information about
+    text and column widths and fontsize.
+
+    The output of this function can be directly used to setup the page.
+
+    Using this function requires a working LaTeX installation.
+
+    :param documentclass: layout standard to use (ex. article, report, book, ...)
+    :param columns: number of columns (ex. twocolumn)
+    :param papersize: size of the paper (ex. a4paper, letterpaper, ...)
+    :param fontsize: size of the font (ex. 10pt, 11pt, 12pt)
+    :param otheroptions: comma-separated additional options
+    :return: dictionary with textwidth, columnwidth and fontsize
+    """
+
+    # check for LaTeX
+    haslatex = any((os.access(os.path.join(path, "latex"), os.X_OK) and os.path.isfile(os.path.join(path, "latex")))
+                   for path in os.environ["PATH"].split(os.pathsep))
+
+    if not haslatex:
+        raise RuntimeError("No LaTeX installation found")
+
+    # build file content
+    options = ""
+    if columns:
+        options = options + str(columns) + ","
+    if papersize:
+        options = options + str(papersize) + ","
+    if fontsize:
+        if type(fontsize) != str:
+            options = options + str(fontsize) + "pt,"
+        else:
+            options = options + fontsize + ","
+    if otheroptions:
+        options = otheroptions + otheroptions
+    latex_file_content = r"\documentclass[{options}]{{{documentclass}}}".format(documentclass=documentclass,
+                                                                                options=options) + \
+                         r"""
+
+\usepackage{layouts}
+
+\begin{document}
+
+textwidth: \printinunitsof{in}\prntlen{\textwidth}
+\message{textwidth: \prntlen{\textwidth}^^J}
+
+columnwidth: \printinunitsof{in}\prntlen{\columnwidth}
+\message{columnwidth: \prntlen{\columnwidth}^^J}
+
+\message{fontsize: \the\font^^J}
+
+\end{document}
+"""
+
+    # create temporary directory to run latex
+    tmpdir = tempfile.mkdtemp()
+
+    # write latex file
+    with open(tmpdir + "/file.tex", "w") as texfile:
+        texfile.write(latex_file_content)
+
+    # run latex
+    latex_output = subprocess.check_output(["latex", "file.tex"], cwd=tmpdir).decode()
+
+    shutil.rmtree(tmpdir)
+
+    latex_output = latex_output.replace("\n", "")
+
+    # find widths
+    twr = re.compile(r"\\relax ([0-9]+\.[0-9]+)in")
+    m = twr.findall(latex_output)
+
+    if len(m) != 2:
+        raise RuntimeError("Something went wrong with the execution of LaTeX")
+
+    textwidth = float(m[0])
+    columnwidth = float(m[1])
+
+    # find font size
+    fr = re.compile(r"fontsize:.*/([0-9]+\.?[0-9]*)")
+    m = fr.search(latex_output)
+
+    if m is None:
+        raise RuntimeError("Something went wrong with the execution of LaTeX")
+
+    fontsize = float(m.groups()[0])
+
+    return {
+        "textwidth": textwidth,
+        "columnwidth": columnwidth,
+        "fontsize": fontsize
+    }

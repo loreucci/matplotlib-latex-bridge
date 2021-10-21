@@ -36,3 +36,9 @@ in the initial setup.
 .. autofunction:: figure_textwidth
 
 .. autofunction:: figure
+
+Getting format from LaTeX
+-------------------------
+This function can be used to get format informations directly from LaTeX, but requires a working LaTeX installation.
+
+.. autofunction:: get_format_from_latex

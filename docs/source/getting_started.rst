@@ -82,6 +82,9 @@ specified with the ``documentclass`` command, like in
 
     \documentclass[letterpaper, 10pt]{article}
 
+All these values can be gathered directly from the LaTeX processor, using
+:func:`matplotlib_latex_bridge.get_format_from_latex`, if a working LaTeX installation is present.
+
 A more fine-grained control over the font sizes can be achieved by using :func:`matplotlib_latex_bridge.set_font_sizes`
 and :func:`matplotlib_latex_bridge.set_font_family`.
 

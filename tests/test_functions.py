@@ -69,5 +69,19 @@ class TestFigure(unittest.TestCase):
         self.assertIn("Invalid percentual width", mock_stderr.getvalue())
 
 
+class TestLatex(unittest.TestCase):
+
+    def test_format_from_latex(self):
+
+        fmt = mlb.get_format_from_latex(documentclass="article",
+                                        columns="twocolumn",
+                                        papersize="letterpaper",
+                                        fontsize=12)
+
+        self.assertAlmostEqual(fmt["textwidth"], 6.49083)
+        self.assertAlmostEqual(fmt["columnwidth"], 3.17621)
+        self.assertAlmostEqual(fmt["fontsize"], 12)
+
+
 if __name__ == '__main__':
     unittest.main()
