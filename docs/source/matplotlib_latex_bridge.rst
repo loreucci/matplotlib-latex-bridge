@@ -31,7 +31,7 @@ Figure generation
 These functions allow the creation of matplotlib figures using (or overriding) the default size specified
 in the initial setup.
 
-.. autofunction:: figure_linewidth
+.. autofunction:: figure_columnwidth
 
 .. autofunction:: figure_textwidth
 

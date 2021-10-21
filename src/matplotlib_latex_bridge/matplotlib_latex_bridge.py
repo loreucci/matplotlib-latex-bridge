@@ -6,7 +6,7 @@ import sys
 
 mlb_initialized = False
 mlb_textwidth = 0.0
-mlb_linewidth = 0.0
+mlb_columnwidth = 0.0
 mlb_defaultw = 6.4
 mlb_defaulth = 4.8
 
@@ -40,7 +40,7 @@ def adjust_size(w, h):
             w = mlb_defaultw
             h = mlb_defaulth
         else:
-            w = mlb_linewidth  # arbitrary
+            w = mlb_columnwidth  # arbitrary
             h = mlb_defaulth / mlb_defaultw * w
     elif w is None:
         w = mlb_defaultw / mlb_defaulth * h
@@ -128,30 +128,30 @@ def set_default_figsize(w=None, h=None, dpi=400):
     plt.rc('savefig', dpi=dpi)
 
 
-def setup_page(textwidth, linewidth, fontsize, dpi=400, usetex=True):
+def setup_page(textwidth, columnwidth, fontsize, dpi=400, usetex=True):
     """
     Setup the page defaults
 
     Using LaTex to render text requires a working LaTeX installation.
 
     :param textwidth: width of the text in inches
-    :param linewidth: widht of the line (column) in inches
+    :param columnwidth: widht of the line (column) in inches
     :param fontsize: default font size of the document
     :param dpi: dpi for generated images
     :param usetex: True if the LaTeX processor should be enabled to render text
     """
 
-    global mlb_textwidth, mlb_linewidth, mlb_initialized
+    global mlb_textwidth, mlb_columnwidth, mlb_initialized
 
     # set max widths for warnings
     mlb_textwidth = textwidth
-    mlb_linewidth = linewidth
+    mlb_columnwidth = columnwidth
 
     # set default fonts
     set_font_sizes(medium=fontsize)
 
-    # set defaults figuresize to linewidth
-    set_default_figsize(w=linewidth, dpi=dpi)
+    # set defaults figuresize to columnwidth
+    set_default_figsize(w=columnwidth, dpi=dpi)
 
     # use constrained layout
     plt.rc('figure.constrained_layout', use=True)
@@ -183,7 +183,7 @@ def figure_textwidth(widthp=1.0, height=None, **kwargs):
     return plt.figure(figsize=(w, h), **kwargs)
 
 
-def figure_linewidth(widthp=1.0, height=None, **kwargs):
+def figure_columnwidth(widthp=1.0, height=None, **kwargs):
     """
     Creates a figure that fill the width of the line (column)
 
@@ -192,14 +192,14 @@ def figure_linewidth(widthp=1.0, height=None, **kwargs):
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
-    assert_initialized("figure_linewidth")
+    assert_initialized("figure_columnwidth")
 
     if widthp <= 0 or widthp > 1:
         print("Invalid percentual width of the figure {widthp}, must be between 0 and 1".format(widthp=widthp),
               file=sys.stderr)
         widthp = 1.0
 
-    w, h = adjust_size(widthp * mlb_linewidth, height)
+    w, h = adjust_size(widthp * mlb_columnwidth, height)
 
     return plt.figure(figsize=(w, h), **kwargs)
 
@@ -219,13 +219,9 @@ def figure(width=None, height=None, **kwargs):
 
     w, h = adjust_size(width, height)
 
-    if mlb_linewidth < w < mlb_textwidth:
-        print("Requested width ({w}) is larger that linewidth ({mlb_linewidth})".format(w=w,
-                                                                                        mlb_linewidth=mlb_linewidth),
-              file=sys.stderr)
+    if mlb_columnwidth < w < mlb_textwidth:
+        print("Requested width ({}) is larger that columnwidth ({})".format(w, mlb_columnwidth), file=sys.stderr)
     elif mlb_textwidth < w:
-        print("Requested width ({w}) is larger that textwidth ({mlb_textwidth})".format(w=w,
-                                                                                        mlb_textwidth=mlb_textwidth),
-              file=sys.stderr)
+        print("Requested width ({}) is larger that textwidth ({})".format(w, mlb_textwidth), file=sys.stderr)
 
     return plt.figure(figsize=(w, h), **kwargs)

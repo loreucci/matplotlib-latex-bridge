@@ -18,7 +18,7 @@ if __name__ == '__main__':
 
     mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
 
-    mlb.figure_linewidth()
+    mlb.figure_columnwidth()
     plt.plot(x, y)
     plt.xlabel("time (s)")
     plt.ylabel("amplitude")

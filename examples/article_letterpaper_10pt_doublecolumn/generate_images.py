@@ -18,9 +18,9 @@ if __name__ == '__main__':
     plt.title("waveform")
     plt.savefig("textwidth.png")
 
-    mlb.figure_linewidth()
+    mlb.figure_columnwidth()
     plt.plot(x, y)
     plt.xlabel("time (s)")
     plt.ylabel("amplitude")
     plt.title("waveform")
-    plt.savefig("linewidth.png")
+    plt.savefig("columnwidth.png")

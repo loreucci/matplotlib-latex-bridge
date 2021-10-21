@@ -34,7 +34,7 @@ setting the right sizes:
 .. code-block:: python
 
     fig = mlb.figure_textwidth()  # for full page images
-    fig = mlb.figure_linewidth()  # for full column images
+    fig = mlb.figure_columnwidth()  # for full column images
 
     # from now on use matplotlib as normal
     plt.plot(...)
@@ -59,7 +59,7 @@ Customization
 If there is no preset for your page format, or if you want more control over the size of the images generated,
 you must manually specify the parameters for the :func:`matplotlib_latex_bridge.setup_page` function.
 
-The ``textwidth`` and ``linewidth`` parameters are the width of the page and the column, respectively.
+The ``textwidth`` and ``columnwidth`` parameters are the width of the page and the column, respectively.
 These two values are the same for single column documents, but they are different for multi-column environments.
 The values for the current page layout can be found using the ``layouts`` latex package:
 
@@ -70,7 +70,8 @@ The values for the current page layout can be found using the ``layouts`` latex 
     \begin{document}
 
     textwidth: \printinunitsof{in}\prntlen{\textwidth}
-    linewidth: \printinunitsof{in}\prntlen{\linewidth}
+
+    columnwidth: \printinunitsof{in}\prntlen{\columnwidth}
 
     \end{document}
 

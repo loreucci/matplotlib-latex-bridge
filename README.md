@@ -23,7 +23,7 @@ mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn)
 Create a new figure and use it as normal:
 ```python
 mlb.figure_textwidth()  # for full page images
-mlb.figure_linewidth()  # for full column images
+mlb.figure_columnwidth()  # for full column images
 
 plt.plot(...)  # use matplotlib as normal
 

@@ -17,7 +17,7 @@ class TestBasics(unittest.TestCase):
 
     def test_setup(self):
         mlb.setup_page(**mlb.formats.article_letterpaper_10pt_singlecolumn)
-        self.assertEqual(mlb.formats.article_letterpaper_10pt_singlecolumn["linewidth"], mlb.get_default_figsize()[0])
+        self.assertEqual(mlb.formats.article_letterpaper_10pt_singlecolumn["columnwidth"], mlb.get_default_figsize()[0])
 
     def test_set_default_figsize(self):
         mlb.set_default_figsize(w=10, h=20)
@@ -43,9 +43,9 @@ class TestFigure(unittest.TestCase):
         w, _ = fig.get_size_inches()
         self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["textwidth"])
 
-        fig = mlb.figure_linewidth()
+        fig = mlb.figure_columnwidth()
         w, _ = fig.get_size_inches()
-        self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["linewidth"])
+        self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["columnwidth"])
 
     def test_width_percentage(self):
         mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
@@ -54,15 +54,15 @@ class TestFigure(unittest.TestCase):
         w, _ = fig.get_size_inches()
         self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["textwidth"]*0.4)
 
-        fig = mlb.figure_linewidth(0.7)
+        fig = mlb.figure_columnwidth(0.7)
         w, _ = fig.get_size_inches()
-        self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["linewidth"]*0.7)
+        self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["columnwidth"]*0.7)
 
     @mock.patch('sys.stderr', new_callable=StringIO)
     def test_width_percentage_error(self, mock_stderr):
         mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
 
-        mlb.figure_linewidth(0.5)
+        mlb.figure_columnwidth(0.5)
         self.assertNotIn("Invalid percentual width", mock_stderr.getvalue())
 
         mlb.figure_textwidth(1.2)
