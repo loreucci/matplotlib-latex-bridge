@@ -11,6 +11,22 @@ Example:
 ![example](https://github.com/loreucci/matplotlib-latex-bridge/raw/master/mlb-example.png)
 
 
+## Install
+
+The latest stable version can be installed via pip:
+
+```commandline
+pip install matplotlib-latex-bridge
+```
+
+Otherwise, the library can be installed from sources:
+
+```commandline
+git clone https://github.com/loreucci/matplotlib-latex-bridge.git
+cd matplotlib-latex-bridge
+pip install -e .
+```
+
 ## Quickstart
 
 Initialize the library using one of the presets provided:

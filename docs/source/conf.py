@@ -11,7 +11,7 @@ import matplotlib_latex_bridge as mlb
 # -- Project information -----------------------------------------------------
 
 project = 'matplotlib-latex-bridge'
-copyright = '2021, Lorenzo Vannucci'
+copyright = '2022, Lorenzo Vannucci'
 author = 'Lorenzo Vannucci'
 
 # The full version, including alpha/beta/rc tags
