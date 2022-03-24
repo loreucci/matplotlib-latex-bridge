@@ -42,3 +42,12 @@ Getting format from LaTeX
 This function can be used to get format informations directly from LaTeX, but requires a working LaTeX installation.
 
 .. autofunction:: get_format_from_latex
+
+LaTeX error management
+----------------------
+These functions act as wrappers around the corresponding `pyplot` functions, but they try to intercepts LaTeX
+compilation errors, filter the error to find the offending string and raise a less verbose exception.
+
+.. autofunction:: show
+
+.. autofunction:: savefig

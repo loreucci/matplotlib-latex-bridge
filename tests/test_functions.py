@@ -82,6 +82,16 @@ class TestLatex(unittest.TestCase):
         self.assertAlmostEqual(fmt["columnwidth"], 3.17621)
         self.assertAlmostEqual(fmt["fontsize"], 12)
 
+    def test_special_characters(self):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+        fig = mlb.figure_textwidth()
+        ax = fig.gca()
+        ax.plot(range(10), range(10), label="#")
+
+        ax.legend()
+        with self.assertRaises(RuntimeError):
+            mlb.savefig("shouldnotsave.png")
+
 
 if __name__ == '__main__':
     unittest.main()

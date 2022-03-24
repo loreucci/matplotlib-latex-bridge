@@ -6,6 +6,7 @@ import re
 import subprocess
 import tempfile
 import shutil
+import io
 
 
 mlb_initialized = False
@@ -327,3 +328,74 @@ columnwidth: \printinunitsof{in}\prntlen{\columnwidth}
         "columnwidth": columnwidth,
         "fontsize": fontsize
     }
+
+
+def capturelatexerror(fun):
+    """
+    Decorator to add LaTeX error checking.
+
+    The returned function will try to filter for errors raised by LaTeX and raise them after filtering the error output.
+    :param fun: original function
+    :return: decorated function
+    """
+
+    def checkingfun(*args, **kwargs):
+
+        latex_error_string = "was not able to process the following string:"
+
+        # reroute stderr in a stream
+        errors = io.StringIO()
+        old_stderr = sys.stderr
+        sys.stderr = errors
+
+        latex_error = None
+        try:
+            fun(*args, **kwargs)
+        except RuntimeError as err:  # Agg
+            if latex_error_string in str(err).split('\n')[0]:
+                latex_error = " ".join(str(err).split('\n')[0:2])
+        # restore stderr
+        sys.stderr = old_stderr
+
+        if latex_error is not None:
+            raise RuntimeError(latex_error)
+
+        # search for latex error in stderr (QT, Tk)
+        print_next = False
+        latex_error = None
+        for line in errors.getvalue().split('\n'):
+            if latex_error_string in line:
+                print_next = True
+                latex_error = line.replace("RuntimeError: ", "")
+            elif print_next:
+                latex_error = "{} {}".format(latex_error, line[1:])
+                break
+
+        if latex_error:
+            raise RuntimeError(latex_error)
+
+    checkingfun.__doc__ = fun.__doc__
+
+    return checkingfun
+
+
+@capturelatexerror
+def show(*args, **kwargs):
+    """
+    Wrapper around pyplot.show that filters LaTeX errors
+
+    :param args: forwarded to pyplot.show
+    :param kwargs: forwarded to pyplot.show
+    """
+    plt.show(*args, **kwargs)
+
+
+@capturelatexerror
+def savefig(*args, **kwargs):
+    """
+    Wrapper around pyplot.savefig that filters LaTeX errors
+
+    :param args: forwarded to pyplot.savefig
+    :param kwargs: forwarded to pyplot.savefig
+    """
+    plt.savefig(*args, **kwargs)
