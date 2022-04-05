@@ -76,7 +76,9 @@ def set_font_family(family='serif', usetex=True):
 
 def get_default_figsize():
     """
-    Return the current figure size defaults
+    Return the current matplotlib figure size defaults
+
+    This is the size that will be used when calling pyplot.figure().
 
     :return: default width, default height
     """
@@ -169,7 +171,7 @@ def setup_page(textwidth, columnwidth, fontsize, dpi=400, usetex=True):
 
 def figure_textwidth(widthp=1.0, height=None, **kwargs):
     """
-    Creates a figure that fill the width of the page
+    Creates a figure that fills the width of the page
 
     :param widthp: width of the figure as a percentage of the text width (between 0 and 1)
     :param height: height of the figure (optional)
@@ -190,7 +192,7 @@ def figure_textwidth(widthp=1.0, height=None, **kwargs):
 
 def figure_columnwidth(widthp=1.0, height=None, **kwargs):
     """
-    Creates a figure that fill the width of the line (column)
+    Creates a figure that fills the width of the line (column)
 
     :param widthp: width of the figure as a percentage of the line width (between 0 and 1)
     :param height:  height of the figure (optional)
