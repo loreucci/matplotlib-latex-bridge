@@ -59,14 +59,73 @@ class TestFigure(unittest.TestCase):
         self.assertAlmostEqual(w, mlb.formats.article_letterpaper_10pt_doublecolumn["columnwidth"]*0.7)
 
     @mock.patch('sys.stderr', new_callable=StringIO)
-    def test_width_percentage_error(self, mock_stderr):
+    def test_width_percentage_error_textwidth(self, mock_stderr):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+
+        mlb.figure_textwidth(0.5)
+        self.assertNotIn("Invalid percentual width", mock_stderr.getvalue())
+
+        mlb.figure_textwidth(1.2)
+        self.assertIn("Invalid percentual width", mock_stderr.getvalue())
+
+    @mock.patch('sys.stderr', new_callable=StringIO)
+    def test_width_percentage_error_columnwidth(self, mock_stderr):
         mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
 
         mlb.figure_columnwidth(0.5)
         self.assertNotIn("Invalid percentual width", mock_stderr.getvalue())
 
-        mlb.figure_textwidth(1.2)
+        mlb.figure_columnwidth(1.2)
         self.assertIn("Invalid percentual width", mock_stderr.getvalue())
+
+    def test_ratio(self):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+
+        fig = mlb.figure_textwidth(ratio=2.0 / 1.0)
+        w, h = fig.get_size_inches()
+        self.assertAlmostEqual(h, w * 0.5)
+
+        fig = mlb.figure_columnwidth(ratio=3.0 / 2.0)
+        w, h = fig.get_size_inches()
+        self.assertAlmostEqual(h, w * 2.0 / 3.0)
+
+        fig = mlb.figure(width=2.0, ratio=16.0 / 9.0)
+        w, h = fig.get_size_inches()
+        self.assertAlmostEqual(h, w * 9.0 / 16.0)
+
+        fig = mlb.figure(height=2.0, ratio=4.0 / 3.0)
+        w, h = fig.get_size_inches()
+        self.assertAlmostEqual(w, h * 4.0 / 3.0)
+
+    @mock.patch('sys.stderr', new_callable=StringIO)
+    def test_ratio_error_textwidth(self, mock_stderr):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+
+        mlb.figure_textwidth(ratio=1)
+        self.assertNotIn("Given both height and ratio", mock_stderr.getvalue())
+
+        mlb.figure_textwidth(height=1, ratio=1)
+        self.assertIn("Given both height and ratio", mock_stderr.getvalue())
+
+    @mock.patch('sys.stderr', new_callable=StringIO)
+    def test_ratio_error_columnwidth(self, mock_stderr):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+
+        mlb.figure_columnwidth(ratio=1)
+        self.assertNotIn("Given both height and ratio", mock_stderr.getvalue())
+
+        mlb.figure_columnwidth(height=1, ratio=1)
+        self.assertIn("Given both height and ratio", mock_stderr.getvalue())
+
+    @mock.patch('sys.stderr', new_callable=StringIO)
+    def test_ratio_error_figure(self, mock_stderr):
+        mlb.setup_page(**mlb.formats.article_letterpaper_10pt_doublecolumn)
+
+        mlb.figure(width=1.0, ratio=1)
+        self.assertNotIn("Given width, height and ratio", mock_stderr.getvalue())
+
+        mlb.figure(width=1.0, height=1.0, ratio=1)
+        self.assertIn("Given width, height and ratio", mock_stderr.getvalue())
 
 
 class TestLatex(unittest.TestCase):

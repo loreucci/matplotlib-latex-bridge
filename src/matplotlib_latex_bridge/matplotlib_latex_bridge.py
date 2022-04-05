@@ -28,7 +28,7 @@ def assert_initialized(caller):
         raise RuntimeError("setup_page must be called before using {caller}".format(caller=caller))
 
 
-def adjust_size(w, h):
+def adjust_size(w, h, r=None):
     """
     Adjust a given figure size with the current defaults
 
@@ -37,8 +37,12 @@ def adjust_size(w, h):
 
     :param w: input width
     :param h: input height
+    :param r: ratio
     :return: adjusted w, adjusted h
     """
+
+    if r is None:
+        r = mlb_defaultw / mlb_defaulth
 
     if w is None and h is None:
         if not mlb_initialized:
@@ -46,11 +50,11 @@ def adjust_size(w, h):
             h = mlb_defaulth
         else:
             w = mlb_columnwidth  # arbitrary
-            h = mlb_defaulth / mlb_defaultw * w
+            h = w / r
     elif w is None:
-        w = mlb_defaultw / mlb_defaulth * h
+        w = h * r
     elif h is None:
-        h = mlb_defaulth / mlb_defaultw * w
+        h = w / r
 
     return w, h
 
@@ -169,12 +173,13 @@ def setup_page(textwidth, columnwidth, fontsize, dpi=400, usetex=True):
     mlb_initialized = True
 
 
-def figure_textwidth(widthp=1.0, height=None, **kwargs):
+def figure_textwidth(widthp=1.0, height=None, ratio=None, **kwargs):
     """
     Creates a figure that fills the width of the page
 
     :param widthp: width of the figure as a percentage of the text width (between 0 and 1)
     :param height: height of the figure (optional)
+    :param ratio: proportion of the figure (width / height) (optional, alternative to height)
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
@@ -185,17 +190,21 @@ def figure_textwidth(widthp=1.0, height=None, **kwargs):
               file=sys.stderr)
         widthp = 1.0
 
-    w, h = adjust_size(widthp * mlb_textwidth, height)
+    if ratio is not None and height is not None:
+        print("Given both height and ratio parameters to figure, ratio will be ignored", file=sys.stderr)
+
+    w, h = adjust_size(widthp * mlb_textwidth, height, ratio)
 
     return plt.figure(figsize=(w, h), **kwargs)
 
 
-def figure_columnwidth(widthp=1.0, height=None, **kwargs):
+def figure_columnwidth(widthp=1.0, height=None, ratio=None, **kwargs):
     """
     Creates a figure that fills the width of the line (column)
 
     :param widthp: width of the figure as a percentage of the line width (between 0 and 1)
     :param height:  height of the figure (optional)
+    :param ratio: proportion of the figure (width / height) (optional, alternative to height)
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
@@ -206,25 +215,35 @@ def figure_columnwidth(widthp=1.0, height=None, **kwargs):
               file=sys.stderr)
         widthp = 1.0
 
-    w, h = adjust_size(widthp * mlb_columnwidth, height)
+    if ratio is not None and height is not None:
+        print("Given both height and ratio parameters to figure, ratio will be ignored", file=sys.stderr)
+
+    w, h = adjust_size(widthp * mlb_columnwidth, height, ratio)
 
     return plt.figure(figsize=(w, h), **kwargs)
 
 
-def figure(width=None, height=None, **kwargs):
+def figure(width=None, height=None, ratio=None, **kwargs):
     """
     Creates a figure with a custom size
 
     This function will print a warning if the figure width exceeds the width of the page or the line.
 
+    By default, this will create a figure with the same size as pyplot.figure(), which is the columnsize set by
+    setup_page. Ratio can be used together with one between width and height to specify the proportions of the figure.
+
     :param width: width of the figure (optional)
     :param height: height of the figure (optional)
+    :param ratio: proportion of the figure (width / height) (optional)
     :param kwargs: arguments that will be forwarded to matplotlib.pyplot.figure()
     :return: the new figure (matplotlib.figure.Figure)
     """
     assert_initialized("figure")
 
-    w, h = adjust_size(width, height)
+    if width is not None and height is not None and ratio is not None:
+        print("Given width, height and ratio parameters to figure, ratio will be ignored", file=sys.stderr)
+
+    w, h = adjust_size(width, height, ratio)
 
     if mlb_columnwidth < w < mlb_textwidth:
         print("Requested width ({}) is larger that columnwidth ({})".format(w, mlb_columnwidth), file=sys.stderr)
